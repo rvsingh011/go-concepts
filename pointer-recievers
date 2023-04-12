@@ -1,0 +1,53 @@
+package main
+
+import (
+	"fmt"
+)
+
+type user struct {
+	name string 
+	id int
+	email string
+}
+
+func(u user) Notify() {
+	fmt.Println("Notify the user", u.id)
+}
+
+func(u *user) ChageEmai(email string) {
+	fmt.Println("Old Email for the user was", u.email)
+	u.email = email
+	fmt.Println("New email to the user", u.email)
+}
+
+
+func main() {
+	// Case 1:
+	// With the value of type user, I can call both type of methods
+	// Since I can
+	fmt.Println("Hello, World!")
+	userValue := user{name: "Ravi", id: 23, email: "rvisngh011"}
+	userValue.Notify();
+	// sendEmail is a pointer reciever however I am calling it with value. It is possible because GO is automatically adjusting the pointer. so the actual call is (&userValue).SendEmail()
+	// Taking the address of value of the user does not create any side effects.
+	userValue.ChageEmai("hello@gmail.com");
+
+
+	// Case2: 
+	// with the pointer we can call both type of method without errors however there will be side effects of the code. 
+	userRef :=  &user{name: "Ravi", id: 23, email: "rvisngh011"}
+	// since the lanaguge automatically handle these cases
+	// the lanaguage is taking (*userRef).Notify()
+	// this means I am driving a value from a pointer. Pointer are not meant to be copied. Not everything can be copied. Pointer are meant to be shared and not copied. 
+	userRef.Notify()
+
+	// This is fine as it is not copying but is working on a shared copy of the things.
+	userRef.ChageEmai("thisisme@gamil.com")
+}
+
+
+// Chapter 2: 
+// In case of the build in type, always use the value type by default unless it is a sql query. (WHY ?)
+// In case of refrence type- function, map , slice, interface, channels use value type. Unless it is unmarhsall or decode methods?
+// Even in the struct values it should be followed. 
+// For user defined type (structs) We have a choice. Pointer should be a exception and value should be the rule. When there is a new value coming out then it should be a value else it should be refrence. 
